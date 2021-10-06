@@ -47,7 +47,31 @@ app.post('/recipes', (req, res) => {
   recipes.push({ id, name, price });
 
   res.status(201).json({message: 'Recipe create successfully'});
-})
+});
+
+app.put('/recipes/:id', (req, res) => {
+  const { id } = req.params;
+  const { name, price } = req.body;
+ 
+  const recipeIndex = recipes.findIndex((r) => r.id === parseInt(id));
+  console.log(recipeIndex)
+  if (recipeIndex === -1) return res.status(404).json({ message: 'Id não encontrado' });
+
+  recipes[recipeIndex] = { ...recipes[recipeIndex], name, price };
+
+  res.status(204).end();
+
+});
+
+app.delete('/recipes/:id', (req, res) => {
+  const { id } = req.params;
+  
+  const recipeIndex = recipes.findIndex((r) => r.id === parseInt(id));
+
+  recipes.splice(recipeIndex, 1);
+
+  res.status(204).end();
+});
 
 app.listen(PORT, () => {
   console.log(`Rodando aplicação na porta ${PORT}`)
